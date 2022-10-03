@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceDetails implements UserDetailsService {
 
@@ -23,12 +25,7 @@ public class UserServiceDetails implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return user;
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElseThrow();
     }
 }
